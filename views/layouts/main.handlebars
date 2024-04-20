@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share-A-Bytes</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+
+<body>
+  <div>
+    <nav>
+      <div class="nav-wrapper #aa00ff purple accent-4">
+        <a href="/" class="brand-logo">The Tech Blog</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="/"> Home </a></li>
+          <li><a href="/dashboard"> Dashboard </a></li>
+          <li> {{#if loggedIn}}
+            <button id="logout" class="waves-effect waves-light btn-large">Logout</button>
+            {{else}}
+            <a class="waves-effect waves-light btn-large" href="/login">Login</a>
+            {{/if}}
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <main class="background #4a148c purple darken-4">
+      {{{body}}}
+    </main>
+  </div>
+
+</body>
+
+</html>
