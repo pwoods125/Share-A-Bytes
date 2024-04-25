@@ -1,0 +1,17 @@
+<div class="blog-card">
+    <div class="blog-card-header">
+        {{post.postTitle}}
+        {{post.user.user_name}}
+        {{post.date_created}}
+    </div>
+    <div class="card-body">
+        <p>
+            {{post.content}}
+        </p>
+    </div>
+    {{#if post.comments}}
+    {{#each post.comments as comment}}
+    {{> comment}}
+    {{/each}}
+    {{/if}}
+</div>
