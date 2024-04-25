@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Post } = require('../models');
+const { Post, User, Comments } = require('../models');
 // Import the custom middleware
 // eslint-disable-next-line no-unused-vars
 const withAuth = require('../utils/auth');
@@ -9,7 +9,6 @@ router.get('/', async (req, res) => {
     const postData = await Post.findAll({});
 
     const postLogged = postData.map((post) => post.get({ plain: true }));
-    console.log(postLogged);
     return res.render('home', {
       posts: postLogged,
       loggedIn: req.session.loggedIn,
@@ -18,9 +17,44 @@ router.get('/', async (req, res) => {
     return res.status(500).json(err);
   }
 });
+// {
+//   id: 1,
+//   postTitle: 'Stack vs. Queue',
+//   content: 'Stack: Last in, First out (LIFO) / Queue: First in, First Out (FIFO)',
+//   date_created: 2024-04-17T20:50:24.000Z,
+//   user_id: 1
+// }
+
+router.get('/post/:id', async (req, res) => {
+  try {
+    const postData = await Post.findByPk(req.params.id, {
+      include: [
+        User,
+        {
+          model: Comments,
+        },
+      ],
+    });
+    if (!postData) {
+      res.status(404).json({ message: 'No post with this id!' });
+      return;
+    }
+    const postBlog = postData.get({ plain: true });
+    console.log(postBlog);
+    return res.render('blog', {
+      post: postBlog,
+      loggedIn: req.session.loggedIn,
+    });
+    // res.render('blog', post);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 router.get('/dashboard', withAuth, async (req, res) => {
-  res.render('dashboard');
+  res.render('dashboard', {
+    loggedIn: req.session.loggedIn,
+  });
 });
 
 router.get('/login', async (req, res) => {
@@ -52,6 +86,10 @@ router.get('/post', async (req, res) => {
 
 router.get('/post', withAuth, async (req, res) => {
   res.render('post');
+});
+
+router.get('/post/:id', withAuth, async (req, res) => {
+  res.render('blog');
 });
 
 router.get('/login', (req, res) => {
