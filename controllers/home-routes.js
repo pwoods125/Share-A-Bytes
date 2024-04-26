@@ -17,13 +17,6 @@ router.get('/', async (req, res) => {
     return res.status(500).json(err);
   }
 });
-// {
-//   id: 1,
-//   postTitle: 'Stack vs. Queue',
-//   content: 'Stack: Last in, First out (LIFO) / Queue: First in, First Out (FIFO)',
-//   date_created: 2024-04-17T20:50:24.000Z,
-//   user_id: 1
-// }
 
 router.get('/post/:id', async (req, res) => {
   try {
@@ -32,6 +25,7 @@ router.get('/post/:id', async (req, res) => {
         User,
         {
           model: Comments,
+          include: [User],
         },
       ],
     });
@@ -45,7 +39,6 @@ router.get('/post/:id', async (req, res) => {
       post: postBlog,
       loggedIn: req.session.loggedIn,
     });
-    // res.render('blog', post);
   } catch (err) {
     res.status(500).json(err);
   }
