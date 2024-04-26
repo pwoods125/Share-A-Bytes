@@ -14,4 +14,14 @@
     {{> comment}}
     {{/each}}
     {{/if}}
+    <div class="comment-container">
+        <form class="new-comment-form">
+            <label for="usercomment"></label>
+            <input id="usercomment" name="usercomments" placeholder="Add a comment"></input>
+            </br>
+            <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+        </form>
+    </div>
 </div>
+
+<script src="/js/comment.js"></script>
