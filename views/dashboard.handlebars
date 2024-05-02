@@ -1,3 +1,28 @@
 <div>
-    <a href="/post">+New Post</a>
+    <div class="card-panel #3e2723 brown darken-4">
+        <h2>
+            <a class="white-text" href="/post">+ Create New Post</a>
+        </h2>
+    </div>
+
+    {{#if posts.length}}
+    <div class="col-md-6 post-list">
+        <h2 class="center-align">Your Post:</h2>
+
+        {{#each posts as |post|}}
+        <div class="collection">
+            <h3>
+                <a href="/post/{{post.id}}"
+                    class="collection-item #3e2723 brown darken-4 white-text">{{post.postTitle}}</a>
+            </h3>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-sm #795548 brown btn-danger" data-id="{{post.id}}">Remove</button>
+        </div>
+    </div>
+    {{/each}}
 </div>
+{{/if}}
+</div>
+
+<script src="/js/dashboard.js"></script>

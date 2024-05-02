@@ -6,7 +6,13 @@ const withAuth = require('../utils/auth');
 
 router.get('/', async (req, res) => {
   try {
-    const postData = await Post.findAll({});
+    const postData = await Post.findAll({
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
 
     const postLogged = postData.map((post) => post.get({ plain: true }));
     return res.render('home', {
@@ -45,9 +51,23 @@ router.get('/post/:id', async (req, res) => {
 });
 
 router.get('/dashboard', withAuth, async (req, res) => {
-  res.render('dashboard', {
-    loggedIn: req.session.loggedIn,
-  });
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+      include: [
+        {
+          model: Post,
+        },
+      ],
+    });
+    const userPost = userData.get({ plain: true });
+
+    res.render('dashboard', {
+      ...userPost,
+      loggedIn: req.session.loggedIn,
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 });
 
 router.get('/login', async (req, res) => {
@@ -64,7 +84,13 @@ router.get('/logout', async (req, res) => {
 
 router.get('/post', async (req, res) => {
   try {
-    const postData = await Post.findAll({});
+    const postData = await Post.findAll({
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
 
     const postLogged = postData.map((post) => post.get({ plain: true }));
     console.log(postLogged);

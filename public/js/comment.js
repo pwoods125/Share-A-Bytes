@@ -1,13 +1,17 @@
 async function newCommentFormHandler(event) {
   event.preventDefault();
 
-  const userComment = document.querySelector('#usercomment').value.trim();
+  const comment = document
+    .querySelector('input[name="usercomments"]')
+    .value.trim();
+  const { postid } = event.target.dataset;
 
-  if (userComment) {
+  if (comment) {
     const response = await fetch(`/api/comments`, {
       method: 'POST',
       body: JSON.stringify({
-        userComment,
+        comment,
+        postid,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -23,5 +27,5 @@ async function newCommentFormHandler(event) {
 }
 
 document
-  .querySelector('.new-comment-form')
+  .querySelector('#new-comment-form')
   .addEventListener('submit', newCommentFormHandler);
