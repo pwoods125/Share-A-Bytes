@@ -11,25 +11,27 @@
 <body>
   <div>
     <nav>
-      <div class="nav-wrapper #aa00ff purple accent-4">
+      <div class="nav-wrapper #3e2723 brown darken-4">
         <a href="/" class="brand-logo">The Tech Blog</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
           <li><a href="/"> Home </a></li>
           <li><a href="/dashboard"> Dashboard </a></li>
           <li> {{#if loggedIn}}
-            <button id="logout" class="waves-effect waves-light btn-large">Logout</button>
+            <button id="logout" class="waves-effect #795548 brown btn-large">Logout</button>
             {{else}}
-            <a class="waves-effect waves-light btn-large" href="/login">Login</a>
+            <a class="waves-effect #795548 brown btn-large" href="/login">Login</a>
             {{/if}}
           </li>
         </ul>
       </div>
     </nav>
-    <main class="background #4a148c purple darken-4">
+    <main>
       {{{body}}}
     </main>
   </div>
-
+  {{#if loggedIn}}
+  <script src="/js/logout.js"></script>
+  {{/if}}
 </body>
 
 </html>

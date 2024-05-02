@@ -1,15 +1,20 @@
 const router = require('express').Router();
-const { Post } = require('../models');
+const { Post, User, Comments } = require('../models');
 // Import the custom middleware
 // eslint-disable-next-line no-unused-vars
 const withAuth = require('../utils/auth');
 
 router.get('/', async (req, res) => {
   try {
-    const postData = await Post.findAll({});
+    const postData = await Post.findAll({
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
 
     const postLogged = postData.map((post) => post.get({ plain: true }));
-    console.log(postLogged);
     return res.render('home', {
       posts: postLogged,
       loggedIn: req.session.loggedIn,
@@ -19,8 +24,50 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/post/:id', async (req, res) => {
+  try {
+    const postData = await Post.findByPk(req.params.id, {
+      include: [
+        User,
+        {
+          model: Comments,
+          include: [User],
+        },
+      ],
+    });
+    if (!postData) {
+      res.status(404).json({ message: 'No post with this id!' });
+      return;
+    }
+    const postBlog = postData.get({ plain: true });
+    console.log(postBlog);
+    return res.render('blog', {
+      post: postBlog,
+      loggedIn: req.session.loggedIn,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 router.get('/dashboard', withAuth, async (req, res) => {
-  res.render('dashboard');
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+      include: [
+        {
+          model: Post,
+        },
+      ],
+    });
+    const userPost = userData.get({ plain: true });
+
+    res.render('dashboard', {
+      ...userPost,
+      loggedIn: req.session.loggedIn,
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 });
 
 router.get('/login', async (req, res) => {
@@ -37,7 +84,13 @@ router.get('/logout', async (req, res) => {
 
 router.get('/post', async (req, res) => {
   try {
-    const postData = await Post.findAll({});
+    const postData = await Post.findAll({
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
 
     const postLogged = postData.map((post) => post.get({ plain: true }));
     console.log(postLogged);
@@ -52,6 +105,10 @@ router.get('/post', async (req, res) => {
 
 router.get('/post', withAuth, async (req, res) => {
   res.render('post');
+});
+
+router.get('/post/:id', withAuth, async (req, res) => {
+  res.render('blog');
 });
 
 router.get('/login', (req, res) => {
