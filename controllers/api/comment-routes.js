@@ -1,16 +1,23 @@
 const router = require('express').Router();
-const { Comments } = require('../../models');
+const { Comments, User } = require('../../models');
 const withAuth = require('../../utils/auth');
 
 router.get('/', async (req, res) => {
   try {
-    const commentData = await Comments.findAll({});
+    const commentData = await Comments.findAll({
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
 
     const commentPosted = commentData.map((comment) =>
       comment.get({ plain: true }),
     );
     return res.render('post/:id', {
       comment: commentPosted,
+      user_id: req.session.user_id,
       loggedIn: req.session.loggedIn,
     });
   } catch (err) {
@@ -21,8 +28,14 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const commentData = await Comments.findAll({
+      include: [
+        {
+          model: User,
+        },
+      ],
       where: {
         id: req.params.id,
+        user_id: req.session.user_id,
       },
     });
     res.status(200).json(commentData);
@@ -32,13 +45,16 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+  console.log(req.body);
   try {
     const newComments = await Comments.create({
-      commentText: req.body.commentText,
+      commentText: req.body.comment,
       user_id: req.session.user_id,
+      post_id: req.body.postid,
     });
     res.json(newComments);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });

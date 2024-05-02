@@ -1,27 +1,36 @@
 <div class="blog-card">
-    <div class="blog-card-header">
-        {{post.postTitle}}
-        {{post.user.user_name}}
-        {{post.date_created}}
-    </div>
-    <div class="card-body">
-        <p>
-            {{post.content}}
-        </p>
-    </div>
-    {{#if post.comments}}
-    {{#each post.comments as comment}}
-    {{> comment}}
-    {{/each}}
-    {{/if}}
-    <div class="comment-container">
-        <form class="new-comment-form">
-            <label for="usercomment"></label>
-            <input id="usercomment" name="usercomments" placeholder="Add a comment"></input>
+    <div class="row">
+        <div class="col s12 m5">
+            <div class="card-panel #3e2723 brown darken-4 white-text">
+                {{post.postTitle}}
+                {{post.user.user_name}}
+                {{post.date_created}}
+            </div>
+            <div class="card-body #3e2723 brown darken-4 white-text">
+                <p>
+                    {{post.content}}
+                </p>
+            </div>
             </br>
-            <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
-        </form>
-    </div>
-</div>
+            <div>
+                {{#if post.comments}}
+                {{#each post.comments}}
+                {{> comment}}
+                <p>
+                    Created by {{comment.user.user_name}} on {{format_date date_created}}
+                </p>
+                </br>
+                {{/each}}
+                {{/if}}
+            </div>
+            <div class="comment-container">
+                <form id="new-comment-form" data-postid={{post.id}} data-contentid="5">
+                    <label for="usercomment"></label>
+                    <input name="usercomments" placeholder="Add a comment"></input>
+                    </br>
+                    <button class="btn waves-effect #795548 brown" type="submit" name="action">Submit</button>
+                </form>
+            </div>
+        </div>
 
-<script src="/js/comment.js"></script>
+        <script src="/js/comment.js"></script>

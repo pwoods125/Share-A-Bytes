@@ -1,14 +1,14 @@
 {{#each posts as |post| }}
+<div class="collection">
+    <h2>
+        <a href="/post/{{post.id}}" class="collection-item #3e2723 brown darken-4 white-text">{{post.postTitle}}</a>
+    </h2>
+    <p>Created by {{post.user.user_name}} on {{format_date post.date_created}}</p>
+</div>
 <div class="row mb-4 post">
-    <div class="col-md-5">
-        <h2>
-            <a href="/post/{{post.id}}">{{post.postTitle}}</a>
-        </h2>
-        <p>Created by {{post.user.user_name}} on {{format_date post.date_created}}</p>
-    </div>
-    <div class="col-md-7">
+    <div class="col-md-7 center-align">
         <p>
-            {{dashboard.content}}
+            {{post.content}}
         </p>
     </div>
 </div>
